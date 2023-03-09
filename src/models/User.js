@@ -1,7 +1,7 @@
 const User = (sequelize, DataTypes) => {
   const user = sequelize.define('user', {
     id: { primaryKey: true, autoIncrement: true, type: DataTypes.INTEGER},
-    displayName: {
+    display_name: {
       allowNull: false,
       type: DataTypes.STRING,
       field: 'display_name',

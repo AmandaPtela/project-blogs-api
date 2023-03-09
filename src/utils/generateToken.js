@@ -9,7 +9,7 @@ const configJwt = {
 
 function generateToken(payload) {
   const token = jwt.sign({ payload }, secret, configJwt);
-  return token.toString();
+  return token;
 }
 
 module.exports = generateToken;
