@@ -16,7 +16,7 @@ async function validateToken(request, response, next) {
       return response.status(401).json({ message: 'Expired or invalid token' });
     }
   next();
-  } catch(er) {
+  } catch (er) {
     return response.status(401).json({ message: er.message });
   }
 }

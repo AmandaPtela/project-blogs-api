@@ -11,7 +11,7 @@ const loginService = async (usuario) => {
   const arraySchema = Joi.array().items(schema);
   const { error } = arraySchema.validate([usuario]);
   const { email, password } = usuario;
-  console.log('RESULTADO: ------------------> ', await User);
+  console.log('RESULTADO: ------------------> ', User);
   if (error) return ({ status: 400, token: 'Some required fields are missing' });
   const result2 = await User.findOne({ where: { email } });
   if (!result2) return ({ status: 400, token: 'Invalid fields' });
