@@ -8,7 +8,7 @@ module.exports = {
         autoIncrement: true,
         type: Sequelize.INTEGER
       },
-      display_Name: {
+      display_name: {
         allowNull: false,
         type: Sequelize.STRING,
         field: 'display_name',
@@ -23,14 +23,6 @@ module.exports = {
       },
       image: {
         type: Sequelize.STRING
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       },
     });
   },

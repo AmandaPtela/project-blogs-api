@@ -1,5 +1,5 @@
 const User = (sequelize, DataTypes) => {
-  const user = sequelize.define('user', {
+  const user = sequelize.define('User', {
     id: { primaryKey: true, autoIncrement: true, type: DataTypes.INTEGER},
     display_name: {
       allowNull: false,
@@ -15,14 +15,6 @@ const User = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     image: DataTypes.STRING,
-    createdAt: {
-      allowNull: false,
-      type: DataTypes.DATE
-    },
-    updatedAt: {
-      allowNull: false,
-      type: DataTypes.DATE
-    },
   });
   User.associate = (mod) => {
     User.hasMany(mod.blog_posts, { foreignKey: 'user_id', as: 'userId' })

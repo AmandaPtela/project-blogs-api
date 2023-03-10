@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const User = require('../models/index');
+const { User } = require('../models');
 const generateToken = require('../utils/generateToken');
 
 const userService = async (user) => {
@@ -15,9 +15,9 @@ const userService = async (user) => {
   const { error } = arraySchema.validate([user]);
   const { email } = user;
   if (error) return ({ status: 400, message: error.message });
-  const result2 = await User.user.findOne({ where: { email } });
+  const result2 = await User.findOne({ where: { email } });
   if (result2) return ({ status: 409, message: 'User already registered' });
-  const result = await User.user.create(user);
+  const result = await User.create(user);
   return ({ status: 201, message: result, token: generateToken(user) });
 };
 module.exports = { userService };
