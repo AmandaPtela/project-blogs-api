@@ -11,7 +11,7 @@ const loginService = async (usuario) => {
   const arraySchema = Joi.array().items(schema);
   const { error } = arraySchema.validate([usuario]);
   const { email, password } = usuario;
-  console.log('RESULTADO: ------------------> ', User);
+  // console.log('RESULTADO: ------------------> ', User);
   if (error) return ({ status: 400, token: 'Some required fields are missing' });
   const result2 = await User.findOne({ where: { email } });
   if (!result2) return ({ status: 400, token: 'Invalid fields' });
@@ -21,7 +21,8 @@ const loginService = async (usuario) => {
 };
 
 const createUserService = async (user) => {
-  const schema = Joi.object({ displayName: Joi.string().min(8)
+  try {
+    const schema = Joi.object({ displayName: Joi.string().min(8)
     .required().label('displayName'),
     email: Joi.string().email()
     .required().label('email'),
@@ -33,17 +34,15 @@ const createUserService = async (user) => {
   const { error } = arraySchema.validate([user]);
   const { email } = user;
   if (error) return ({ status: 400, message: error.message });
-  console.log(email);
   const result2 = await User.findOne({ where: { email } });
   if (result2) return ({ status: 409, message: 'User already registered' });
-  
   const createUser = await User.create(user);
   return ({ status: 201, creation: createUser, find: result2, token: generateToken(user) });
+} catch (error) { return { status: error.status, message: error.message }; }
 };
 
 async function getAllUsersService() {
-  const result = async () => User.findAll();
-  console.log(result);
+  const result = await User.findAll({ attributes: { exclude: 'password' } });
   return ({ status: 200, message: result });
 }
 

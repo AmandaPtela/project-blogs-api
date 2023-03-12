@@ -9,8 +9,12 @@ const loginController = async (request, response) => {
 };
 
 const getAllUsersController = async (_request, response) => {
-  const result = await userService.getAllUsersService();
-  response.status(result.status).json(result.message);
+  try {
+    const result = await userService.getAllUsersService();
+    response.status(result.status).json(result.message);
+  } catch (error) {
+    return response.status(error.status).json(error.message);
+  }
 };
 
 const createUserController = async (request, response) => {
