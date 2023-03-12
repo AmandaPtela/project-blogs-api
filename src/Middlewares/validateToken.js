@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { userByEmailService } = require('../SERVICES/userByEmailService');
+const userService = require('../SERVICES/userService');
 require('dotenv/config');
 
 async function validateToken(request, response, next) {
@@ -11,7 +11,7 @@ async function validateToken(request, response, next) {
       return response.status(401).json({ message: 'Token not found' });
     }
 
-    const verify = await userByEmailService(payload.email);
+    const verify = await userService.getUserByEmailService(payload.email);
     if (!verify) {
       return response.status(401).json({ message: 'Expired or invalid token' });
     }

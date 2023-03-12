@@ -1,10 +1,13 @@
 const User = (sequelize, DataTypes) => {
   const user = sequelize.define('User', {
-    id: { primaryKey: true, autoIncrement: true, type: DataTypes.INTEGER},
-    display_name: {
+    id: { 
+      primaryKey: true,
+      autoIncrement: true,
+      type: DataTypes.INTEGER
+    },
+    displayName: {
       allowNull: false,
       type: DataTypes.STRING,
-      field: 'display_name',
     },
     email: {
       allowNull: false,
@@ -15,10 +18,15 @@ const User = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     image: DataTypes.STRING,
-  });
-  User.associate = (mod) => {
+  },
+  {
+    tableName: 'users',
+    timestamps: false,
+    underscored: true,
+  },);
+/*   User.associate = (mod) => {
     User.hasMany(mod.blog_posts, { foreignKey: 'user_id', as: 'userId' })
-  };
+  }; */
   return user;
 };
 
