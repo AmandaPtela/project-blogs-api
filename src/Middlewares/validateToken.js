@@ -15,7 +15,7 @@ async function validateToken(request, response, next) {
     // const user = await userService.getUserByEmailService(payload.payload.email);
     request.user = payload;
   } catch (error) {
-    response.status(401).json({ message: 'Expired or invalid token' });
+    return response.status(401).json({ message: 'Expired or invalid token' });
   }
   next();
 }
