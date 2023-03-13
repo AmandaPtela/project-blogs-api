@@ -1,5 +1,6 @@
 const express = require('express');
 const userController = require('./CONTROLLERS/userController');
+const categoryController = require('./CONTROLLERS/categoryController');
 const validateToken = require('./Middlewares/validateToken');
 
 const app = express();
@@ -20,5 +21,7 @@ app.get('/user', validateToken, userController.getAllUsersController);
 app.get('/user/:id', validateToken, userController.getUserByIdController);
 
 app.post('/user', userController.createUserController);
+
+app.post('/categories', validateToken, categoryController.createCategoryController);
 
 module.exports = app;
