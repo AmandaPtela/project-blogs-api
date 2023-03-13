@@ -1,5 +1,6 @@
 const express = require('express');
 const userController = require('./CONTROLLERS/userController');
+const postController = require('./CONTROLLERS/postController');
 const categoryController = require('./CONTROLLERS/categoryController');
 const validateToken = require('./Middlewares/validateToken');
 
@@ -25,5 +26,7 @@ app.post('/user', userController.createUserController);
 app.post('/categories', validateToken, categoryController.createCategoryController);
 
 app.get('/categories', validateToken, categoryController.getAllCategoriesService);
+
+app.post('/post', validateToken, postController.createPostController);
 
 module.exports = app;
