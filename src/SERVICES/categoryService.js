@@ -12,6 +12,12 @@ const createCategoryService = async (user) => {
   return ({ status: 201, message: result });
 };
 
+const getAllCategoriesService = async () => {
+  const result = await Category.findAll();
+  return ({ status: 200, message: result });
+};
+
 module.exports = {
   createCategoryService,
+  getAllCategoriesService,
 };

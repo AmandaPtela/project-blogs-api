@@ -24,4 +24,6 @@ app.post('/user', userController.createUserController);
 
 app.post('/categories', validateToken, categoryController.createCategoryController);
 
+app.get('/categories', validateToken, categoryController.getAllCategoriesService);
+
 module.exports = app;
