@@ -17,6 +17,8 @@ app.post('/login', userController.loginController);
 
 app.get('/user', validateToken, userController.getAllUsersController);
 
+app.get('/user/:id', validateToken, userController.getUserByIdController);
+
 app.post('/user', userController.createUserController);
 
 module.exports = app;

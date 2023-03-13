@@ -50,4 +50,23 @@ async function getUserByEmailService(email) {
   const result = await User.findOne({ where: { email } });
   return ({ status: 200, message: result });
 }
-module.exports = { loginService, createUserService, getAllUsersService, getUserByEmailService };
+
+const getUserByIdService = async (id) => {
+  const result = await User.findOne({ where: { id } });
+  if (!result) return ({ status: 404, message: 'User does not exist' });
+  return ({
+    status: 200,
+    result: {
+      id: result.id,
+      displayName: result.displayName,
+      email: result.email,
+      image: result.image,
+    } });
+};
+module.exports = {
+  loginService,
+  createUserService,
+  getAllUsersService,
+  getUserByEmailService,
+  getUserByIdService,
+};

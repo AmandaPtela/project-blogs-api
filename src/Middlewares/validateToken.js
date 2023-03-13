@@ -10,12 +10,11 @@ async function validateToken(request, response, next) {
     if (!authorization) {
       return response.status(401).json({ message: 'Token not found' });
     }
-  
+
     const payload = await jwt.verify(authorization, secret);
     // const user = await userService.getUserByEmailService(payload.payload.email);
     request.user = payload;
   } catch (error) {
-  console.log(error);
     response.status(401).json({ message: 'Expired or invalid token' });
   }
   next();
