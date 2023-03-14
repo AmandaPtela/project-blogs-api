@@ -18,7 +18,6 @@ module.exports = {
         type: Sequelize.STRING
       },
       user_id: {
-        field: 'user_id',
         references: {
           model: 'users',
           key: 'id'
@@ -28,13 +27,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       published: {
-        allowNull: false,
+        defaultValue:Sequelize.literal('CURRENT_TIMESTAMP()'),
         type: Sequelize.DATE,
       },
       updated: {
-        allowNull: false,
+        // defaultValue:Sequelize.literal('CURRENT_TIMESTAMP()'),
         type: Sequelize.DATE,
       },
+    },
+    {
+      timestamps: false,
     });
   },
 

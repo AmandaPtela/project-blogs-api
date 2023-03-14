@@ -1,10 +1,11 @@
+/* eslint-disable object-shorthand */
 const Joi = require('joi');
 const { User } = require('../models');
 const { BlogPost } = require('../models');
 const { Category } = require('../models');
 
-const createPostService = async (post) => {
-  const { categoryIds } = post; 
+const createPostService = async (post, userId) => {
+  const { title, content, categoryIds } = post;
     const schema = Joi.object({ title: Joi.string().min(1)
       .required().label('title'),
       content: Joi.string()
@@ -16,12 +17,13 @@ const createPostService = async (post) => {
   if (error) return ({ status: 400, message: error.message });
   const findId = await Category.findAll({ where: { id: categoryIds } });
   if (findId.length !== categoryIds.length) {
-    return ({
-      status: 400, message: 'one or more "categoryIds" not found' }); 
+    return ({ status: 400, message: 'one or more "categoryIds" not found' });
     }
-    const resultPost2 = async () => { await BlogPost.create(post); };
-    // const resultPost2 = await BlogPost.findOne({ where: { content } });
-  return ({ status: 201, message: resultPost2 });
+  // eslint-disable-next-line max-len
+  const created = { title: title, content: content, postCategories: categoryIds, userId: userId };
+  const resultPost = await BlogPost.create(created);
+  console.log(resultPost);
+  return { status: 201, message: { resultPost, postCategories: categoryIds } };
 };
 
  const getByIdPostService = async (id) => {
