@@ -4,7 +4,7 @@ const createPostController = async (request, response) => {
     const post = request.body;
     const result = await postService.createPostService(post);
     if (result.status === 201) {
-      return response.status(result.status).json(result.resultado);
+      return response.status(result.status).json(result.messagae);
     }
     if (result.message.includes('not found')) {
  return response
