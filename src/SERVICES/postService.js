@@ -11,40 +11,37 @@ const createPostService = async (post) => {
       .required().label('content'),
       categoryIds: Joi.array().required().label('categoryIds'),
     });
-  
   const arraySchema = Joi.array().items(schema);
   const { error } = arraySchema.validate([post]);
-  
   if (error) return ({ status: 400, message: error.message });
   const findId = await Category.findAll({ where: { id: categoryIds } });
-
   if (findId.length !== categoryIds.length) {
  return ({
     status: 400, message: 'one or more "categoryIds" not found' }); 
-}
-    
-    const createPost = await BlogPost.create(post);
-    const resultPost = await BlogPost.findOne({ where: { title } });
-  return ({ status: 201, message: createPost, resultado: resultPost });
+  }
+  await BlogPost.create(post);
+  const resultPost = await BlogPost.findOne({ where: { title } });
+  return ({ status: 201, message: resultPost });
 };
 
-/* const getByIdPostService = async (id) => {
-  const result = async () => await BlogPost.findOne({
+ const getByIdPostService = async (id) => {
+  const result = await BlogPost.findOne({
     where: { userId: id },
     include: [
-      { model: User, as: 'users', attributes: { exclude: 'password' } },
+      { model: User, as: 'user', attributes: { exclude: 'password' } },
       { model: Category,
-         as: 'blogPost',
-         attributes: { exclude: 'PostCategory' }
-      }
-    ]
+         as: 'categories',
+         attributes: { exclude: 'PostCategory' },
+      },
+    ],
   });
-  if (!result) return {
-    status: 400,
-    message: "Post does not exist" }
-    const a = async () => await BlogPost.findByPk(id);
-  return ({ status: 200, message: a });
-} */
+  if (!result) {
+    return { status: 404, message: 'Post does not exist' };
+  }
+  console.log(result);
+  // const a = await BlogPost.findByPk(id);
+  return ({ status: 200, message: result });
+};
 
 const getAllPostService = async () => {
   const result = await BlogPost.findAll({
@@ -62,6 +59,6 @@ const getAllPostService = async () => {
 
 module.exports = {
   createPostService,
-  // getByIdPostService,
+  getByIdPostService,
   getAllPostService,
 };

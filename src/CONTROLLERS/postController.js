@@ -18,12 +18,15 @@ const createPostController = async (request, response) => {
 }
 };
 
-/* const getByIdPostController = async (request, response) => {
+const getByIdPostController = async (request, response) => {
   const { id } = request.params;
   const result = await postService.getByIdPostService(id);
-
-  return response.status(result.status).json({ message: result.message });
-} */
+  if (result.status === 404) { 
+    return response.status(result.status)
+  .json({ message: 'Post does not exist' });
+}
+  return response.status(result.status).json(result.message);
+};
 
 const getAllPostController = async (_request, response) => {
   const result = await postService.getAllPostService();
@@ -32,6 +35,6 @@ const getAllPostController = async (_request, response) => {
 };
 module.exports = {
   createPostController,
-  // getByIdPostController,
+  getByIdPostController,
   getAllPostController,
 };
