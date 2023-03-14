@@ -1,7 +1,10 @@
 const Joi = require('joi');
+const { User } = require('../models');
 const { BlogPost } = require('../models');
+const { Category } = require('../models');
 
 const createPostService = async (post) => {
+  const { categoryIds, title } = post; 
     const schema = Joi.object({ title: Joi.string().min(1)
       .required().label('title'),
       content: Joi.string()
@@ -10,13 +13,55 @@ const createPostService = async (post) => {
     });
   
   const arraySchema = Joi.array().items(schema);
-  const { error } = arraySchema.validate([post])
+  const { error } = arraySchema.validate([post]);
   
-  console.log(error);
   if (error) return ({ status: 400, message: error.message });
+  const findId = await Category.findAll({ where: { id: categoryIds } });
 
-  const createUser = async () => await BlogPost.create(post);
-  return ({ status: 201, message: createUser });
+  if (findId.length !== categoryIds.length) {
+ return ({
+    status: 400, message: 'one or more "categoryIds" not found' }); 
+}
+    
+    const createPost = await BlogPost.create(post);
+    const resultPost = await BlogPost.findOne({ where: { title } });
+  return ({ status: 201, message: createPost, resultado: resultPost });
 };
 
-module.exports = { createPostService };
+/* const getByIdPostService = async (id) => {
+  const result = async () => await BlogPost.findOne({
+    where: { userId: id },
+    include: [
+      { model: User, as: 'users', attributes: { exclude: 'password' } },
+      { model: Category,
+         as: 'blogPost',
+         attributes: { exclude: 'PostCategory' }
+      }
+    ]
+  });
+  if (!result) return {
+    status: 400,
+    message: "Post does not exist" }
+    const a = async () => await BlogPost.findByPk(id);
+  return ({ status: 200, message: a });
+} */
+
+const getAllPostService = async () => {
+  const result = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: 'password' } },
+      { model: Category,
+         as: 'categories',
+         attributes: { exclude: 'PostCategory' },
+      },
+    ],
+  });
+  console.log(result);
+  return ({ status: 200, message: result });
+};
+
+module.exports = {
+  createPostService,
+  // getByIdPostService,
+  getAllPostService,
+};

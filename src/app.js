@@ -29,4 +29,8 @@ app.get('/categories', validateToken, categoryController.getAllCategoriesService
 
 app.post('/post', validateToken, postController.createPostController);
 
+app.get('/post', validateToken, postController.getAllPostController);
+
+// app.get('/post/:id', validateToken, postController.getByIdPostController);
+
 module.exports = app;
