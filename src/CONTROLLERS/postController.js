@@ -33,8 +33,22 @@ const getAllPostController = async (_request, response) => {
 
   return response.status(result.status).json(result.message);
 };
+
+const updatePostController = async (request, response) => {
+  const { id } = request.params;
+  const changes = request.body;
+  const result = await postService.updatePostService(id, changes);
+  if (result.status === 400) {
+    return response.status(400)
+  .json({ message: 'Some required fields are missing' });
+  }
+  console.log(result.message);
+  return response.status(result.status).json(result.message);
+};
+
 module.exports = {
   createPostController,
   getByIdPostController,
   getAllPostController,
+  updatePostController,
 };

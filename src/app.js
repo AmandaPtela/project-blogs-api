@@ -33,4 +33,6 @@ app.get('/post', validateToken, postController.getAllPostController);
 
 app.get('/post/:id', validateToken, postController.getByIdPostController);
 
+app.put('/post/:id', validateToken, postController.updatePostController);
+
 module.exports = app;

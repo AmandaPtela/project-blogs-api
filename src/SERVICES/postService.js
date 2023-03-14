@@ -55,8 +55,29 @@ const getAllPostService = async () => {
   return ({ status: 200, message: result });
 };
 
+const updatePostService = async (postId, changes) => {
+  const { title, content } = changes;
+  const changeContent = content;
+  const changeTitle = title;
+  const schema = Joi.object({ title: Joi.string().min(1)
+    .required().label('title'),
+    content: Joi.string()
+    .required().label('content'),
+  });
+const arraySchema = Joi.array().items(schema);
+const { error } = arraySchema.validate([changes]);
+if (error) return { status: 400, message: 'Some required fields are missing' };
+  const result = await BlogPost.findOne({ where: { id: postId } });
+  await BlogPost.update(result, {
+    where: { title: changeTitle, content: changeContent },
+  });
+  const update = await BlogPost.findOne({ where: { title: changeTitle } });
+  return ({ status: 200, message: update });
+};
+
 module.exports = {
   createPostService,
   getByIdPostService,
   getAllPostService,
+  updatePostService,
 };
