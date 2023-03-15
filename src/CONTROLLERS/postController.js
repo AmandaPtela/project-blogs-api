@@ -33,13 +33,18 @@ const getAllPostController = async (_request, response) => {
 
 const updatePostController = async (request, response) => {
   const { id } = request.params;
+  const user = request.user.id;
   const changes = request.body;
-  const result = await postService.updatePostService(id, changes);
+  const result = await postService.updatePostService(user, id, changes);
+  console.log(result);
   if (result.status === 400) {
     return response.status(400)
   .json({ message: 'Some required fields are missing' });
   }
-  console.log(result.message);
+  if (result.status === 401) {
+    return response.status(401)
+  .json({ message: 'Unauthorized user' });
+  }
   return response.status(result.status).json(result.message);
 };
 

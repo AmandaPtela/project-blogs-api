@@ -1,4 +1,3 @@
-const Joi = require('joi');
 const { User } = require('../models');
 const { BlogPost } = require('../models');
 const { Category } = require('../models');
@@ -58,23 +57,25 @@ const getAllPostService = async () => {
   return ({ status: 200, message: result });
 };
 
-const updatePostService = async (postId, changes) => {
+const updatePostService = async (user, postId, changes) => {
   const { title, content } = changes;
   const changeContent = content;
   const changeTitle = title;
-  const schema = Joi.object({ title: Joi.string().min(1)
-    .required().label('title'),
-    content: Joi.string()
-    .required().label('content'),
-  });
-const arraySchema = Joi.array().items(schema);
-const { error } = arraySchema.validate([changes]);
-if (error) return { status: 400, message: 'Some required fields are missing' };
+  const changesValues = Object.values(changes).map((i) => i.length === 0);
+  const userValidation = await BlogPost.findOne({ where: { userId: user } });
+
+  if (!userValidation) return { status: 401, message: 'Unauthorized' };
+  if (changesValues.includes(true)) { return { status: 400 }; }
   const result = await BlogPost.findOne({ where: { id: postId } });
-  await BlogPost.update(result, {
-    where: { title: changeTitle, content: changeContent },
+  await result.update({ title: changeTitle, content: changeContent });
+  const update = await BlogPost.findOne({ where: { title: changeTitle },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: 'password' } },
+      { model: Category,
+        as: 'categories',
+        through: { attributes: { exclude: ['postId', 'categoryId'] } },
+     }],
   });
-  const update = await BlogPost.findOne({ where: { title: changeTitle } });
   return ({ status: 200, message: update });
 };
 
