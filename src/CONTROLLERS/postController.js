@@ -48,9 +48,25 @@ const updatePostController = async (request, response) => {
   return response.status(result.status).json(result.message);
 };
 
+const deletePostController = async (request, response) => {
+  const { id } = request.params;
+  const userId = request.user.id;
+  const result = await postService.deletePostService(userId, id);
+  if (result.status === 404) { 
+    return response.status(404)
+  .json({ message: 'Post does not exist' });
+  }
+  if (result.status === 401) { 
+    return response.status(401)
+  .json({ message: 'Unauthorized user' });
+  }
+  return response.status(204).send();
+};
+
 module.exports = {
   createPostController,
   getByIdPostController,
   getAllPostController,
   updatePostController,
+  deletePostController,
 };

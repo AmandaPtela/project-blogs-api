@@ -79,9 +79,23 @@ const updatePostService = async (user, postId, changes) => {
   return ({ status: 200, message: update });
 };
 
+const deletePostService = async (idUser, idPost) => {
+  const post = await BlogPost.findOne({
+    where: { id: idPost } });
+  if (!post) {
+    return { status: 404 };
+  }
+  if (post.userId !== idUser) {
+    return { status: 401 };
+  }
+  await post.destroy();
+  return ({ status: 204 });
+};
+
 module.exports = {
   createPostService,
   getByIdPostService,
   getAllPostService,
   updatePostService,
+  deletePostService,
 };

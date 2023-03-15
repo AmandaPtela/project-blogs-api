@@ -35,4 +35,6 @@ app.get('/post/:id', validateToken, postController.getByIdPostController);
 
 app.put('/post/:id', validateToken, postController.updatePostController);
 
+app.delete('/post/:id', validateToken, postController.deletePostController);
+
 module.exports = app;

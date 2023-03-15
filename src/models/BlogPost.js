@@ -17,6 +17,8 @@ const BlogPost = (sequelize, DataTypes) => {
     userId: {
       allowNull: false,
       type: DataTypes.STRING,
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     published: {
       type: DataTypes.DATE,
