@@ -1,40 +1,42 @@
-/* eslint-disable object-shorthand */
 const Joi = require('joi');
 const { User } = require('../models');
 const { BlogPost } = require('../models');
 const { Category } = require('../models');
+const { PostCategory } = require('../models');
 
 const createPostService = async (post, userId) => {
   const { title, content, categoryIds } = post;
-    const schema = Joi.object({ title: Joi.string().min(1)
-      .required().label('title'),
-      content: Joi.string()
-      .required().label('content'),
-      categoryIds: Joi.array().required().label('categoryIds'),
-    });
-  const arraySchema = Joi.array().items(schema);
-  const { error } = arraySchema.validate([post]);
-  if (error) return ({ status: 400, message: error.message });
+  const postValues = Object.values(post);
+  if (postValues.map((i) => i.length).includes(0)) { return ({ status: 400, erro: '1' }); }
+
+  // Busca na tabela de CATEGORY e valida pelos ids a existência da categoria
   const findId = await Category.findAll({ where: { id: categoryIds } });
   if (findId.length !== categoryIds.length) {
     return ({ status: 400, message: 'one or more "categoryIds" not found' });
     }
-  // eslint-disable-next-line max-len
-  const created = { title: title, content: content, postCategories: categoryIds, userId: userId };
-  const resultPost = await BlogPost.create(created);
-  console.log(resultPost);
-  return { status: 201, message: { resultPost, postCategories: categoryIds } };
+  // Joga os dados do post na tabela BLOGPOST  
+  await BlogPost.create({ title, content, userId });
+  
+  // Busca o post criado na tabela de POSTS e pega o Id dele
+  const postId = await BlogPost.findOne({ where: { title },
+    attributes: { exclude: title, content, userId } });
+  const { id } = postId.dataValues;
+  // Insere o ID e CATEGORIAS do post na tabela POSTCATEGORY
+  categoryIds.forEach((i) => PostCategory.create({ postId: id, categoryId: i }));
+  
+  // Busca na tabela de POSTS e retorna completamente criado
+  const dados = await BlogPost.findOne({ where: { title } });
+  return { status: 201, message: dados };
 };
-
  const getByIdPostService = async (id) => {
   const result = await BlogPost.findOne({
     where: { userId: id },
     include: [
       { model: User, as: 'user', attributes: { exclude: 'password' } },
       { model: Category,
-         as: 'categories',
-         attributes: { exclude: 'PostCategory' },
-      },
+        as: 'categories',
+        through: { attributes: { exclude: ['postId', 'categoryId'] } },
+     },
     ],
   });
   if (!result) {
@@ -49,11 +51,10 @@ const getAllPostService = async () => {
       { model: User, as: 'user', attributes: { exclude: 'password' } },
       { model: Category,
          as: 'categories',
-         attributes: { exclude: 'PostCategory' },
+         through: { attributes: { exclude: ['postId', 'categoryId'] } },
       },
     ],
   });
-  console.log(result);
   return ({ status: 200, message: result });
 };
 

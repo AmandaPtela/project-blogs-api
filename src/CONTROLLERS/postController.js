@@ -4,19 +4,14 @@ const createPostController = async (request, response) => {
   const post = request.body;
   const userId = request.user.id;
   const result = await postService.createPostService(post, userId);
-  const a = result.message;
-  // eslint-disable-next-line object-shorthand, max-len
-  const fullResult = { title: a.title, content: a.content, postCategories: a.categoryIds, userId: userId };
-  if (result.status !== 400) return response.status(201).json(fullResult);
-  if (result.message.includes('not found')) {
-    return response
-    .status(result.status)
-    .json({ message: 'one or more "categoryIds" not found' });
+  if (result.status !== 400) return response.status(201).json(result.message);
+  if (result.erro) { 
+    return response.status(400)
+  .json({ message: 'Some required fields are missing' });
   }
-  if (result.message.includes('required')) {
-    return response
-    .status(result.status)
-    .json({ message: 'Some required fields are missing' }); 
+  if (result.message.includes('not found')) {
+    return response.status(result.status)
+    .json({ message: 'one or more "categoryIds" not found' });
   }
 };
 
