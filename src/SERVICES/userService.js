@@ -62,10 +62,21 @@ const getUserByIdService = async (id) => {
       image: result.image,
     } });
 };
+
+const deleteUserService = async (myId) => {
+  const meUser = await User.findOne({
+    where: { id: myId } });
+  if (!meUser) {
+    return { status: 404 };
+  }
+  await meUser.destroy();
+  return ({ status: 204 });
+};
 module.exports = {
   loginService,
   createUserService,
   getAllUsersService,
   getUserByEmailService,
   getUserByIdService,
+  deleteUserService,
 };

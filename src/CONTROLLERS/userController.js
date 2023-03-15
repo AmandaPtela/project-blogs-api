@@ -36,9 +36,21 @@ const getUserByIdController = async (request, response) => {
     return response.status(error.status).json({ message: error.message });
   }
 };
+
+const deleteUserController = async (request, response) => {
+  const myId = request.user.id;
+  const result = await userService.deleteUserService(myId);
+  if (result.status === 401) { 
+    return response.status(401)
+  .json({ message: 'Unauthorized user' });
+  }
+  return response.status(204).send();
+};
+
 module.exports = {
   loginController,
   getAllUsersController,
   createUserController,
   getUserByIdController,
+  deleteUserController,
 };
