@@ -27,7 +27,26 @@ const createPostService = async (post, userId) => {
   const dados = await BlogPost.findOne({ where: { title } });
   return { status: 201, message: dados };
 };
- const getByIdPostService = async (id) => {
+
+const searchPostService = async (search) => {
+  const posts = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: 'password' } },
+      { model: Category,
+        as: 'categories',
+        through: { attributes: { exclude: ['postId', 'categoryId'] } },
+     },
+    ],
+  });
+  if (search.length === 0) return { status: 200, message: posts };
+
+  const titleSearch = posts.filter((i) => i.title.includes(search)
+  || i.content.includes(search));
+  if (titleSearch) return { status: 200, message: titleSearch };
+  return { status: 200, message: [] };
+};
+
+const getByIdPostService = async (id) => {
   const result = await BlogPost.findOne({
     where: { userId: id },
     include: [
@@ -98,4 +117,5 @@ module.exports = {
   getAllPostService,
   updatePostService,
   deletePostService,
+  searchPostService,
 };

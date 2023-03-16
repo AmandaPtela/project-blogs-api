@@ -38,4 +38,6 @@ app.put('/post/:id', validateToken, postController.updatePostController);
 app.delete('/post/:id', validateToken, postController.deletePostController);
 
 app.delete('/user/me', validateToken, userController.deleteUserController);
+
+app.get('/post/search', validateToken, postController.searchPostController);
 module.exports = app;

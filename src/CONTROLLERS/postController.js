@@ -15,7 +15,7 @@ const createPostController = async (request, response) => {
   }
 };
 
-const getByIdPostController = async (request, response) => {
+ const getByIdPostController = async (request, response) => {
   const { id } = request.params;
   const result = await postService.getByIdPostService(id);
   if (result.status === 404) { 
@@ -63,10 +63,18 @@ const deletePostController = async (request, response) => {
   return response.status(204).send();
 };
 
+const searchPostController = async (request, response) => {
+  const busca = request.query.q;
+  const pesquisa = await postService.searchPostService(busca);
+
+  return response.status(pesquisa.status).json(pesquisa.message);
+};
+
 module.exports = {
   createPostController,
   getByIdPostController,
   getAllPostController,
   updatePostController,
   deletePostController,
+  searchPostController,
 };
