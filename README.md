@@ -21,7 +21,7 @@ Foi desenvolvido utilizando _Docker, NodeJs, Express_ e Arquitetura _MSC_ e paco
    - `git clone git@github.com:AmandaPtela/project-blogs-api.git`
   
   2. Acesse a raíz do projeto e inicialize/suba o container do projeto - usando o arquivo docker-compose.yml -
-   - `docker-compose up -d`
+   - `docker-compose up -d --build`
      
   3. Acesse o bash do container
    - `docker exec -it blogs_api bash`
