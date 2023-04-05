@@ -30,4 +30,4 @@ Foi desenvolvido utilizando _Docker, NodeJs, Express_ e Arquitetura _MSC_ e paco
   5. Inicialize o projeto:
    - `npm run dev`
   
-*Os arquivos _docker-compose_, _Docekrfile_ e _.sequelizerc_ são de autoria da **Trybe**.*
+*Os arquivos _docker-compose_, _Docekrfile_ e _.sequelizerc_ são de autoria da **Trybe***
