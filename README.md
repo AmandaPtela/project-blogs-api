@@ -13,7 +13,7 @@ Foi desenvolvido utilizando _Docker, NodeJs, Express_ e Arquitetura _MSC_ e paco
   - Instale as dependências:
     - `npm install`
   - Inicialize o projeto:
-    - `npm start` (uma nova página deve abrir no seu navegador com o projeto)
+    - `npm run dev`
   
   <summary><strong>Rodando o projeto no Docker‼️ </strong></summary><br />
   
